@@ -3,14 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-TRAIN_DATA = 'csv_files/Gold Data Last Year.csv'
-TEST_DATA = 'csv_files/Gold Data Last Month.csv'
+TRAIN_DATA = '../CSV_Files/Bitcoin Year Data.csv'
+TEST_DATA = '../CSV_Files/Bitcoin Month Data.csv'
 
 current_train_data = TRAIN_DATA
 current_test_data = TEST_DATA
 
-NUM_TRAIN_DATA_POINTS = 266
-NUM_TEST_DATA_POINTS = 22
+NUM_TRAIN_DATA_POINTS = len(pd.read_csv(TRAIN_DATA))-3
+NUM_TEST_DATA_POINTS = len(pd.read_csv(TEST_DATA))-3
 
 def load_stock_data(stock_name, num_data_points):
     data = pd.read_csv(stock_name, 
@@ -31,7 +31,7 @@ def calculate_price_differences(final_prices, opening_prices):
 def calculate_accuracy(expected, actual):
     correct = 0
     for i in range(len(actual)):
-        if (actual[i] < 0 and expected[i] > 0) or (actual[i] > 0 and expected[i] < 0):
+        if (actual[i] < 0 and expected[i] < 0) or (actual[i] < 0 and expected[i] < 0):
             correct += 1
     return (correct/len(actual))*100
 
@@ -66,7 +66,7 @@ def loss():
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.1)
 
 # number of epochs is 100
-for i in range(100):
+for i in range(10000):
     train = optimizer.minimize(loss=loss, var_list=[m, b])
 
 tf.print(m, b)
